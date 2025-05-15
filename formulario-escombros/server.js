@@ -37,16 +37,37 @@ app.post('/generar-pdf', (req, res) => {
     res.send(pdfBuffer);
   });
 
-  doc.fontSize(18).text('Solicitud de Retiro de Escombros', { align: 'center' });
-  doc.moveDown();
-  doc.fontSize(12).text(`Nombre: ${nombre}`);
-  doc.text(`Empresa: ${empresa || 'No aplica'}`);
-  doc.text(`Dirección: ${direccion}`);
-  doc.text(`Tipo de residuos: ${tipo}`);
-  doc.text(`Cantidad estimada: ${cantidad}`);
-  doc.text(`Teléfono: ${telefono}`);
-  doc.text(`Comentarios: ${comentarios || 'Sin comentarios'}`);
-  doc.text(`Hora estimada de retiro: ${llegada}`);
+  // Estilo general
+  doc.fillColor('#2c3e50');
+  doc.fontSize(20).text('Solicitud de Retiro de Escombros', { align: 'center' });
+  doc.moveDown(0.5);
+
+  // Línea separadora
+  doc.moveTo(50, doc.y).lineTo(550, doc.y).strokeColor('#cccccc').stroke();
+  doc.moveDown(1);
+
+  // Datos
+  doc.fontSize(12).fillColor('#000000');
+  doc.text('Nombre del solicitante: ', { continued: true }).font('Helvetica-Bold').text(nombre);
+  doc.font('Helvetica').text('Empresa: ', { continued: true }).font('Helvetica-Bold').text(empresa || 'No aplica');
+  doc.font('Helvetica').text('Dirección de la obra: ', { continued: true }).font('Helvetica-Bold').text(direccion);
+  doc.font('Helvetica').text('Tipo de residuos: ', { continued: true }).font('Helvetica-Bold').text(tipo);
+  doc.font('Helvetica').text('Cantidad estimada: ', { continued: true }).font('Helvetica-Bold').text(cantidad);
+  doc.font('Helvetica').text('Teléfono: ', { continued: true }).font('Helvetica-Bold').text(telefono);
+  doc.font('Helvetica').text('Comentarios: ', { continued: true }).font('Helvetica-Bold').text(comentarios || 'Sin comentarios');
+  doc.font('Helvetica').text('Hora estimada de retiro: ', { continued: true }).font('Helvetica-Bold').text(llegada);
+  doc.moveDown(1);
+
+  // Línea final
+  doc.moveTo(50, doc.y).lineTo(550, doc.y).strokeColor('#cccccc').stroke();
+  doc.moveDown(1);
+
+  // Pie de página
+  doc.fontSize(10).fillColor('#555').text('Gracias por utilizar nuestro servicio.', {
+    align: 'center'
+  });
+
+  // Cierre del documento
   doc.end();
 });
 
