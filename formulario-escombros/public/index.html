@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Formulario de Escombros</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+  <div class="container mt-5">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white text-center">
+        <h3>Solicitud de Retiro de Escombros</h3>
+      </div>
+      <div class="card-body">
+        <form id="formulario">
+          <input class="form-control mb-3" type="text" id="nombre" placeholder="Nombre" required />
+          <input class="form-control mb-3" type="text" id="empresa" placeholder="Empresa (opcional)" />
+          <input class="form-control mb-3" type="text" id="direccion" placeholder="Dirección de la obra" required />
+          <input class="form-control mb-3" list="tipos" id="tipo" placeholder="Tipo de residuos" required />
+          <datalist id="tipos">
+            <option value="Escombros" />
+            <option value="Madera" />
+            <option value="Metal" />
+            <option value="Mixto" />
+          </datalist>
+          <input class="form-control mb-3" type="text" id="cantidad" placeholder="Cantidad estimada" required />
+          <input class="form-control mb-3" type="tel" id="telefono" placeholder="Teléfono" required />
+          <textarea class="form-control mb-3" id="comentarios" rows="3" placeholder="Comentarios adicionales"></textarea>
+          <button type="submit" class="btn btn-primary w-100">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('formulario');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = {
+        nombre: document.getElementById('nombre').value,
+        empresa: document.getElementById('empresa').value,
+        direccion: document.getElementById('direccion').value,
+        tipo: document.getElementById('tipo').value,
+        cantidad: document.getElementById('cantidad').value,
+        telefono: document.getElementById('telefono').value,
+        comentarios: document.getElementById('comentarios').value
+      };
+
+      alert("Datos completados. Se está generando tu PDF...");
+
+      fetch('/generar-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(response => response.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'Solicitud_Escombros.pdf';
+          a.click();
+          window.URL.revokeObjectURL(url);
+        });
+
+      form.reset();
+    });
+  </script>
+</body>
+</html>
