@@ -21,6 +21,7 @@ app.post('/generar-pdf', (req, res) => {
     telefono,
     comentarios,
   } = req.body;
+  
 
   // Estimación aleatoria
   const hora = Math.floor(Math.random() * (18 - 9 + 1)) + 9;
